@@ -550,36 +550,49 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
         </div>
         
         {!range.useAll && (
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block mb-2 text-sm">Start Number</label>
+        <div className="grid grid-cols-2 gap-3 relative z-10 py-1">
+          <div>
+            <label className="block mb-2 text-sm">Start Number</label>
+            <div className=" backdrop-blur-sm rounded-xl p-1.25 border shadow-soft relative overflow-visible transition-all duration-300 ease-out focus-within:scale-125 focus-within:z-50 focus-within:shadow-xl focus-within:border-white/40">
               <Input
                 type="number"
                 min={0}
                 max={99}
                 value={range.start}
-                onChange={(e) => setRange({ 
-                  ...range, 
-                  start: Math.max(0, Math.min(99, parseInt(e.target.value) || 0))
-                })}
-                className="rounded-xl h-10 text-sm"
+                onChange={(e) =>
+                  setRange({
+                    ...range,
+                    start: Math.max(0, Math.min(99, parseInt(e.target.value) || 0)),
+                  })
+                }
+                onFocus={(e) => e.target.select()} // select all
+                className="text-center bg-white/90 border-0 rounded-lg shadow-soft backdrop-blur-sm h-10 text-base font-semibold focus:bg-white focus:text-lg transition-all duration-300 ease-out w-full"
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm">End Number</label>
+          </div>
+          <div>
+            <label className="block mb-2 text-sm">End Number</label>
+            <div className=" backdrop-blur-sm rounded-xl p-1.25 border shadow-soft relative overflow-visible transition-all duration-300 ease-out focus-within:scale-125 focus-within:z-50 focus-within:shadow-xl focus-within:border-white/40">
               <Input
                 type="number"
                 min={0}
                 max={99}
                 value={range.end}
-                onChange={(e) => setRange({ 
-                  ...range, 
-                  end: Math.max(range.start, Math.min(99, parseInt(e.target.value) || 99))
-                })}
-                className="rounded-xl h-10 text-sm"
+                onChange={(e) =>
+                  setRange({
+                    ...range,
+                    end: Math.max(range.start, Math.min(99, parseInt(e.target.value) || 99)),
+                  })
+                }
+                onFocus={(e) => e.target.select()}
+                className="text-center bg-white/90 border-0 rounded-lg shadow-soft backdrop-blur-sm h-10 text-base font-semibold focus:bg-white focus:text-lg transition-all duration-300 ease-out w-full"
               />
             </div>
           </div>
+        </div>
+
+
+
         )}
         
         <div className="text-sm text-muted-foreground text-center">

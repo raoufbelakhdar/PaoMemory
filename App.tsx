@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { SplashScreen } from './components/SplashScreen';
+import { OnboardingScreen } from './components/OnboardingScreen';
 import { Header } from './components/Header';
 import { InputBar } from './components/InputBar';
 import { StoryOutput } from './components/StoryOutput';
@@ -35,6 +38,10 @@ export interface CustomPAOItem {
 export type AppPage = 'home' | 'create' | 'practice' | 'settings';
 
 export default function App() {
+  // NEW: Splash and Onboarding state
+  const [showSplash, setShowSplash] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const [customPAOData, setCustomPAOData] = useState<CustomPAOItem[]>([]);
   const [practiceMode, setPracticeMode] = useState<'menu' | 'exercise'>('menu');
@@ -53,6 +60,14 @@ export default function App() {
   });
   
   const [hasInteracted, setHasInteracted] = useState(false);
+
+  // NEW: Check if user has completed onboarding
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem('onboarding_completed');
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
 
   // Load theme from localStorage on mount
   useEffect(() => {
@@ -118,6 +133,16 @@ export default function App() {
     setPaoState(newPaoState);
   }, [numberInputs]);
 
+  // NEW: Handle splash screen completion
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
+  // NEW: Handle onboarding completion
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+  };
+
   const handlePAONumberChange = (field: 'person' | 'action' | 'object', value: string) => {
     setNumberInputs(prev => ({ ...prev, [field]: value }));
     setHasInteracted(true);
@@ -161,6 +186,11 @@ export default function App() {
     setTheme(newTheme);
   };
 
+  // NEW: Function to show onboarding again (for Settings page)
+  const handleShowOnboarding = () => {
+    setShowOnboarding(true);
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'create':
@@ -187,6 +217,7 @@ export default function App() {
             onThemeChange={handleThemeChange}
             customPAOData={customPAOData}
             onImportPAOData={handleImportPAOData}
+            onShowOnboarding={handleShowOnboarding} // NEW: Pass function to Settings
           />
         );
       default:
@@ -222,13 +253,31 @@ export default function App() {
   // Determine if header should be shown
   const shouldShowHeader = currentPage !== 'practice' || practiceMode === 'menu';
 
+  // NEW: Show splash/onboarding first, then the main app
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 flex flex-col">
-      {shouldShowHeader && <Header />}
-      
-      {renderPage()}
-      
-      <BottomNav currentPage={currentPage} onPageChange={handlePageChange} />
+      {/* Splash Screen */}
+      <AnimatePresence>
+        {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      </AnimatePresence>
+
+      {/* Onboarding Screen */}
+      <AnimatePresence>
+        {!showSplash && showOnboarding && (
+          <OnboardingScreen onComplete={handleOnboardingComplete} />
+        )}
+      </AnimatePresence>
+
+      {/* Main App (only shows after splash & onboarding) */}
+      {!showSplash && !showOnboarding && (
+        <>
+          {shouldShowHeader && <Header />}
+          
+          {renderPage()}
+          
+          <BottomNav currentPage={currentPage} onPageChange={handlePageChange} />
+        </>
+      )}
     </div>
   );
 }
