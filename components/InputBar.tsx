@@ -12,7 +12,7 @@ interface InputBarProps {
 export function InputBar({ numberInputs, onPAONumberChange, defaultPAOData }: InputBarProps) {
   const getPreviewValue = (field: 'person' | 'action' | 'object', numStr: string) => {
     const num = parseInt(numStr);
-    if (!num || !defaultPAOData[num]) return '';
+    if (isNaN(num) || !defaultPAOData[num]) return '';
     return defaultPAOData[num][field];
   };
 
