@@ -21,7 +21,7 @@ export function InputBar({ numberInputs, onPAONumberChange, defaultPAOData }: In
       field: 'person' as const,
       title: 'Person',
       emoji: '🧍',
-      placeholder: '1-100',
+      placeholder: '0-100',
       gradient: 'from-rose-500/20 via-pink-400/10 to-rose-300/5',
       borderGradient: 'from-rose-400/30 to-pink-300/20'
     },
@@ -29,7 +29,7 @@ export function InputBar({ numberInputs, onPAONumberChange, defaultPAOData }: In
       field: 'action' as const,
       title: 'Action',
       emoji: '🤸',
-      placeholder: '1-100',
+      placeholder: '0-100',
       gradient: 'from-amber-500/20 via-orange-400/10 to-yellow-300/5',
       borderGradient: 'from-amber-400/30 to-orange-300/20'
     },
@@ -37,7 +37,7 @@ export function InputBar({ numberInputs, onPAONumberChange, defaultPAOData }: In
       field: 'object' as const,
       title: 'Object',
       emoji: '📦',
-      placeholder: '1-100',
+      placeholder: '0-100',
       gradient: 'from-emerald-500/20 via-green-400/10 to-teal-300/5',
       borderGradient: 'from-emerald-400/30 to-green-300/20'
     }
@@ -54,14 +54,27 @@ export function InputBar({ numberInputs, onPAONumberChange, defaultPAOData }: In
                 <label className="text-xs font-medium text-foreground/70">{card.title}</label>
               </div>
               <Input
-                type="number"
-                placeholder={card.placeholder}
-                value={numberInputs[card.field]}
-                onChange={(e) => onPAONumberChange(card.field, e.target.value)}
-                className="text-center bg-white/90 border-0 rounded-lg shadow-soft backdrop-blur-sm h-10 text-base font-semibold focus:bg-white focus:scale-150 focus:text-xl focus:h-16 transition-all duration-300 ease-out"
-                min="1"
-                max="100"
-              />
+                  type="text"
+                  placeholder={card.placeholder}
+                  value={numberInputs[card.field]}
+                  onFocus={(e) => e.target.select()} // auto-select all text
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/\D/g, ''); // keep only digits
+                    if (val.length > 2) val = val.slice(0, 2);   // limit to 2 digits
+                    onPAONumberChange(card.field, val);          // save raw while typing
+                  }}
+                  onBlur={(e) => {
+                    let val = e.target.value;
+                    if (val === '') val = '00';
+                    else if (val.length === 1) val = val.padStart(2, '0'); // pad 1→01
+                    if (parseInt(val) > 99) val = '99';
+                    onPAONumberChange(card.field, val);
+                  }}
+                  className="text-center bg-white/90 border-0 rounded-lg shadow-soft backdrop-blur-sm h-10 text-base font-semibold focus:bg-white focus:scale-150 focus:text-xl focus:h-16 transition-all duration-300 ease-out"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+
               {getPreviewValue(card.field, numberInputs[card.field]) && (
                 <div className="mt-2 text-center">
                   <span className="glass-strong px-2 py-1 rounded-md text-xs text-foreground/90 font-medium block truncate">

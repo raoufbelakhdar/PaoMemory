@@ -20,27 +20,31 @@ const cardVariants = {
 
 export function PAOCards({ paoState, defaultPAOData, numberInputs }: PAOCardsProps) {
   const getImageForPAO = (type: 'person' | 'action' | 'object') => {
-    let imageUrl = '';
-    
-    if (type === 'person') {
-      const num = parseInt(numberInputs.person);
-      if (num && defaultPAOData[num]) {
-        imageUrl = defaultPAOData[num].images.person;
-      }
-    } else if (type === 'action') {
-      const num = parseInt(numberInputs.action);
-      if (num && defaultPAOData[num]) {
-        imageUrl = defaultPAOData[num].images.action;
-      }
-    } else if (type === 'object') {
-      const num = parseInt(numberInputs.object);
-      if (num && defaultPAOData[num]) {
-        imageUrl = defaultPAOData[num].images.object;
-      }
+  let imageUrl = '';
+
+  if (type === 'person') {
+    const num = parseInt(numberInputs.person);
+    if (!isNaN(num) && defaultPAOData[num]) {
+      imageUrl = defaultPAOData[num].images.person;
     }
-    
-    return imageUrl || `https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&q=60`;
-  };
+  } else if (type === 'action') {
+    const num = parseInt(numberInputs.action);
+    if (!isNaN(num) && defaultPAOData[num]) {
+      imageUrl = defaultPAOData[num].images.action;
+    }
+  } else if (type === 'object') {
+    const num = parseInt(numberInputs.object);
+    if (!isNaN(num) && defaultPAOData[num]) {
+      imageUrl = defaultPAOData[num].images.object;
+    }
+  }
+
+  return (
+    imageUrl ||
+    `https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&q=60`
+  );
+};
+
 
   const cards = [
     {

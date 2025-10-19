@@ -10,7 +10,7 @@ export function Header() {
           </div>
           <div>
             <h1 className="text-xl font-semibold tracking-tight">PAO Memory</h1>
-            <p className="text-xs text-muted-foreground">Build your memory palace</p>
+            <p className="text-xs text-muted-foreground">Memorize Numbers Faster</p>
           </div>
         </div>
       </div>

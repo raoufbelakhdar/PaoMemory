@@ -41,9 +41,9 @@ export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   
   const [numberInputs, setNumberInputs] = useState<NumberInputs>({
-    person: '2',
-    action: '2', 
-    object: '2'
+    person: '02',
+    action: '02', 
+    object: '02'
   });
   
   const [paoState, setPaoState] = useState<PAOState>({
@@ -91,32 +91,32 @@ export default function App() {
   }, [customPAOData]);
 
   // Update PAO when any number input changes
-  useEffect(() => {
-    const personNum = parseInt(numberInputs.person);
-    const actionNum = parseInt(numberInputs.action);
-    const objectNum = parseInt(numberInputs.object);
+useEffect(() => {
+  const personNum = parseInt(numberInputs.person, 10);
+  const actionNum = parseInt(numberInputs.action, 10);
+  const objectNum = parseInt(numberInputs.object, 10);
 
-    let newPaoState: PAOState = {
-      person: 'Unknown',
-      action: 'unknown',
-      object: 'unknown'
-    };
+  const newPaoState: PAOState = {
+    person: '',
+    action: '',
+    object: ''
+  };
 
-    // Set individual components based on their respective inputs
-    if (personNum && defaultPAOData[personNum]) {
-      newPaoState.person = defaultPAOData[personNum].person;
-    }
-    
-    if (actionNum && defaultPAOData[actionNum]) {
-      newPaoState.action = defaultPAOData[actionNum].action;
-    }
-    
-    if (objectNum && defaultPAOData[objectNum]) {
-      newPaoState.object = defaultPAOData[objectNum].object;
-    }
+  if (!isNaN(personNum) && defaultPAOData[personNum]) {
+    newPaoState.person = defaultPAOData[personNum].person;
+  }
 
-    setPaoState(newPaoState);
-  }, [numberInputs]);
+  if (!isNaN(actionNum) && defaultPAOData[actionNum]) {
+    newPaoState.action = defaultPAOData[actionNum].action;
+  }
+
+  if (!isNaN(objectNum) && defaultPAOData[objectNum]) {
+    newPaoState.object = defaultPAOData[objectNum].object;
+  }
+
+  setPaoState(newPaoState);
+}, [numberInputs]);
+
 
   const handlePAONumberChange = (field: 'person' | 'action' | 'object', value: string) => {
     setNumberInputs(prev => ({ ...prev, [field]: value }));
