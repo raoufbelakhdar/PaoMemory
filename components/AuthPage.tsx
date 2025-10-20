@@ -250,7 +250,7 @@ export function AuthPage({
           </button>
 
           {/* Skip for now option */}
-          {hasPAOData && onSkip && (
+          {onSkip && (
             <button
               type="button"
               onClick={onSkip}

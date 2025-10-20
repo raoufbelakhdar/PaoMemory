@@ -228,7 +228,12 @@ export default function App() {
         );
       case 'profile':
         return user ? (
-          <ProfilePage user={user} onLogout={() => setUser(null)} customPAOCount={customPAOData.length} />
+          <ProfilePage
+            user={user}
+            onLogout={() => setUser(null)}
+            customPAOCount={customPAOData.length}
+            customPAOData={customPAOData}
+          />
         ) : null;
       default:
         return (
@@ -277,7 +282,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 flex flex-col">
-      {shouldShowHeader && <Header userName={user?.name} />}
+      {shouldShowHeader && (
+        <Header
+          userName={user?.name}
+          theme={theme}
+          onThemeChange={handleThemeChange}
+        />
+      )}
       {renderPage()}
       <BottomNav currentPage={currentPage} onPageChange={handlePageChange} />
       {user && <WelcomeMessage userName={user.name} />}
