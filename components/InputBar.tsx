@@ -1,6 +1,6 @@
 //import React from 'react';
 import { Input } from './ui/input';
-import { PAOState, NumberInputs } from '../App';
+import { PAOState, NumberInputs } from '../src/App';
 
 interface InputBarProps {
   numberInputs: NumberInputs;

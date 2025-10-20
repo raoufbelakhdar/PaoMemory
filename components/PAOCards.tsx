@@ -1,7 +1,7 @@
 //import React from 'react';
 import { motion } from 'framer-motion';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { PAOState, NumberInputs } from '../App';
+import { PAOState, NumberInputs } from '../src/App';
 
 interface PAOCardsProps {
   paoState: PAOState;

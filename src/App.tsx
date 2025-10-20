@@ -1,8 +1,4 @@
-
 import { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { SplashScreen } from '../components/SplashScreen';
-import { OnboardingScreen } from '../components/OnboardingScreen';
 import { Header } from '../components/Header';
 import { InputBar } from '../components/InputBar';
 import { StoryOutput } from '../components/StoryOutput';
@@ -13,7 +9,16 @@ import { PracticePage } from '../components/PracticePage';
 import { SettingsPage } from '../components/SettingsPage';
 import { paoData } from '../data/pao-data';
 
-// Import PAO data from TypeScript module
+import { SplashScreen } from '../components/SplashScreen';
+import { OnboardingCarousel } from '../components/OnboardingCarousel';
+import { ImportFlow } from '../components/ImportFlow';
+import { CreateFlow } from '../components/CreateFlow';
+import { AuthPage } from '../components/AuthPage';
+import { ProfilePage } from '../components/ProfilePage';
+import { WelcomeMessage } from '../components/WelcomeMessage';
+import type { AppPage } from './types/AppPage';
+
+// --- Interfaces ---
 const defaultPAOData = paoData;
 
 export interface PAOState {
@@ -36,115 +41,86 @@ export interface CustomPAOItem {
   type: 'person' | 'action' | 'object';
 }
 
-export type AppPage = 'home' | 'create' | 'practice' | 'settings';
+export interface User {
+  email: string;
+  name: string;
+}
 
+
+// --- MAIN APP ---
 export default function App() {
-  // NEW: Splash and Onboarding state
-  const [showSplash, setShowSplash] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
+  const [currentFlow, setCurrentFlow] = useState<'splash' | 'onboarding-choice' | 'onboarding-import' | 'onboarding-create' | 'auth' | 'app'>('splash');
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
+  const [user, setUser] = useState<User | null>(null);
   const [customPAOData, setCustomPAOData] = useState<CustomPAOItem[]>([]);
+  const [tempOnboardingPAOData, setTempOnboardingPAOData] = useState<CustomPAOItem[]>([]);
   const [practiceMode, setPracticeMode] = useState<'menu' | 'exercise'>('menu');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  
+  const [hasInteracted, setHasInteracted] = useState(false);
+
   const [numberInputs, setNumberInputs] = useState<NumberInputs>({
     person: '00',
-    action: '00', 
+    action: '00',
     object: '00'
   });
-  
+
   const [paoState, setPaoState] = useState<PAOState>({
     person: 'Ballerina',
     action: 'bouncing',
     object: 'ball'
   });
-  
-  const [hasInteracted, setHasInteracted] = useState(false);
 
-  // NEW: Check if user has completed onboarding
-  useEffect(() => {
-    const hasCompletedOnboarding = localStorage.getItem('onboarding_completed');
-    if (!hasCompletedOnboarding) {
-      setShowOnboarding(true);
-    }
-  }, []);
-
-  // Load theme from localStorage on mount
+  // --- Theme ---
   useEffect(() => {
     const savedTheme = localStorage.getItem('pao-theme') as 'light' | 'dark' | null;
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
-      // Check system preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(prefersDark ? 'dark' : 'light');
     }
   }, []);
 
-  // Apply theme to document and save to localStorage
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('pao-theme', theme);
   }, [theme]);
 
-  // Load custom PAO data from localStorage on mount
+  // --- Load PAO Data ---
   useEffect(() => {
     const savedData = localStorage.getItem('custom-pao-data');
     if (savedData) {
       try {
-        const parsedData = JSON.parse(savedData);
-        setCustomPAOData(parsedData);
-      } catch (error) {
-        console.error('Failed to load custom PAO data:', error);
+        setCustomPAOData(JSON.parse(savedData));
+      } catch (err) {
+        console.error('Failed to parse PAO data', err);
       }
     }
   }, []);
 
-  // Save custom PAO data to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('custom-pao-data', JSON.stringify(customPAOData));
   }, [customPAOData]);
 
-  // Update PAO when any number input changes
+  // --- Update displayed PAO ---
   useEffect(() => {
     const personNum = parseInt(numberInputs.person);
     const actionNum = parseInt(numberInputs.action);
     const objectNum = parseInt(numberInputs.object);
 
-    let newPaoState: PAOState = {
-      person: 'Unknown',
-      action: 'unknown',
-      object: 'unknown'
-    };
+    let newPaoState: PAOState = { person: 'Unknown', action: 'unknown', object: 'unknown' };
 
-    // Check for valid index explicitly
-    if (personNum !== undefined && !isNaN(personNum) && defaultPAOData[personNum]) {
+    if (!isNaN(personNum) && defaultPAOData[personNum])
       newPaoState.person = defaultPAOData[personNum].person;
-    }
-
-    if (actionNum !== undefined && !isNaN(actionNum) && defaultPAOData[actionNum]) {
+    if (!isNaN(actionNum) && defaultPAOData[actionNum])
       newPaoState.action = defaultPAOData[actionNum].action;
-    }
-
-    if (objectNum !== undefined && !isNaN(objectNum) && defaultPAOData[objectNum]) {
+    if (!isNaN(objectNum) && defaultPAOData[objectNum])
       newPaoState.object = defaultPAOData[objectNum].object;
-    }
 
     setPaoState(newPaoState);
   }, [numberInputs]);
 
-
-  // NEW: Handle splash screen completion
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-  };
-
-  // NEW: Handle onboarding completion
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-  };
-
+  // --- Handlers ---
   const handlePAONumberChange = (field: 'person' | 'action' | 'object', value: string) => {
     setNumberInputs(prev => ({ ...prev, [field]: value }));
     setHasInteracted(true);
@@ -159,9 +135,7 @@ export default function App() {
   };
 
   const handleEditCustomPAO = (id: string, updatedItem: Omit<CustomPAOItem, 'id'>) => {
-    setCustomPAOData(prev => prev.map(item => 
-      item.id === id ? { ...updatedItem, id } : item
-    ));
+    setCustomPAOData(prev => prev.map(item => (item.id === id ? { ...updatedItem, id } : item)));
   };
 
   const handleDeleteCustomPAO = (id: string) => {
@@ -178,21 +152,51 @@ export default function App() {
 
   const handlePageChange = (page: AppPage) => {
     setCurrentPage(page);
-    // Reset practice mode when leaving practice page
-    if (page !== 'practice') {
-      setPracticeMode('menu');
+    if (page !== 'practice') setPracticeMode('menu');
+  };
+
+  const handleThemeChange = (newTheme: 'light' | 'dark') => setTheme(newTheme);
+
+  // --- Onboarding & Auth flow handlers ---
+  const handleSplashComplete = () => setCurrentFlow('onboarding-choice');
+
+  const handleOnboardingChoice = (choice: 'import' | 'create') =>
+    setCurrentFlow(choice === 'import' ? 'onboarding-import' : 'onboarding-create');
+
+  const handleOnboardingBackToChoice = () => setCurrentFlow('onboarding-choice');
+
+  const handleOnboardingSkip = () => setCurrentFlow('auth');
+
+  const handleImportComplete = (data: CustomPAOItem[]) => {
+    setTempOnboardingPAOData(data);
+    setCurrentFlow('auth');
+  };
+
+  const handleCreateComplete = (data: CustomPAOItem[]) => {
+    setTempOnboardingPAOData(data);
+    setCurrentFlow('auth');
+  };
+
+  const handleLogin = (loggedInUser: User) => {
+    setUser(loggedInUser);
+    if (tempOnboardingPAOData.length > 0) {
+      setCustomPAOData(prev => [...prev, ...tempOnboardingPAOData]);
+      setTempOnboardingPAOData([]);
     }
+    setCurrentFlow('app');
   };
 
-  const handleThemeChange = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme);
+  const handleSkipAuth = () => {
+    const guestUser: User = { email: 'guest@paomaster.app', name: 'Guest' };
+    setUser(guestUser);
+    if (tempOnboardingPAOData.length > 0) {
+      setCustomPAOData(prev => [...prev, ...tempOnboardingPAOData]);
+      setTempOnboardingPAOData([]);
+    }
+    setCurrentFlow('app');
   };
 
-  // NEW: Function to show onboarding again (for Settings page)
-  const handleShowOnboarding = () => {
-    setShowOnboarding(true);
-  };
-
+  // --- Page Renderer ---
   const renderPage = () => {
     switch (currentPage) {
       case 'create':
@@ -219,24 +223,25 @@ export default function App() {
             onThemeChange={handleThemeChange}
             customPAOData={customPAOData}
             onImportPAOData={handleImportPAOData}
-            onShowOnboarding={handleShowOnboarding} // NEW: Pass function to Settings
+            onShowOnboarding={handleOnboardingSkip}
           />
         );
+      case 'profile':
+        return user ? (
+          <ProfilePage user={user} onLogout={() => setUser(null)} customPAOCount={customPAOData.length} />
+        ) : null;
       default:
         return (
           <main className="flex-1 px-6 pb-24">
-            <InputBar 
+            <InputBar
               numberInputs={numberInputs}
               paoState={paoState}
               onPAONumberChange={handlePAONumberChange}
               defaultPAOData={defaultPAOData}
             />
-            
             <StoryOutput paoState={paoState} />
-            
             <PAOCards paoState={paoState} defaultPAOData={defaultPAOData} numberInputs={numberInputs} />
-            
-            {hasInteracted && (
+            {!user && hasInteracted && (
               <div className="mt-8 glass rounded-3xl p-6 text-center shadow-medium border border-white/20">
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <span className="text-2xl">✨</span>
@@ -252,34 +257,30 @@ export default function App() {
     }
   };
 
-  // Determine if header should be shown
+  // --- Flow Rendering ---
+  if (currentFlow === 'splash') return <SplashScreen onComplete={handleSplashComplete} />;
+
+  if (currentFlow === 'onboarding-choice')
+    return <OnboardingCarousel onComplete={handleOnboardingChoice} onSkip={handleOnboardingSkip} />;
+
+  if (currentFlow === 'onboarding-import')
+    return <ImportFlow onComplete={handleImportComplete} onBack={handleOnboardingBackToChoice} />;
+
+  if (currentFlow === 'onboarding-create')
+    return <CreateFlow onComplete={handleCreateComplete} onBack={handleOnboardingBackToChoice} />;
+
+  if (currentFlow === 'auth')
+    return <AuthPage onLogin={handleLogin} onSkip={handleSkipAuth} hasPAOData={tempOnboardingPAOData.length > 0} />;
+
+  // --- Main App ---
   const shouldShowHeader = currentPage !== 'practice' || practiceMode === 'menu';
 
-  // NEW: Show splash/onboarding first, then the main app
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 flex flex-col">
-      {/* Splash Screen */}
-      <AnimatePresence>
-        {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-      </AnimatePresence>
-
-      {/* Onboarding Screen */}
-      <AnimatePresence>
-        {!showSplash && showOnboarding && (
-          <OnboardingScreen onComplete={handleOnboardingComplete} />
-        )}
-      </AnimatePresence>
-
-      {/* Main App (only shows after splash & onboarding) */}
-      {!showSplash && !showOnboarding && (
-        <>
-          {shouldShowHeader && <Header />}
-          
-          {renderPage()}
-          
-          <BottomNav currentPage={currentPage} onPageChange={handlePageChange} />
-        </>
-      )}
+      {shouldShowHeader && <Header userName={user?.name} />}
+      {renderPage()}
+      <BottomNav currentPage={currentPage} onPageChange={handlePageChange} />
+      {user && <WelcomeMessage userName={user.name} />}
     </div>
   );
 }

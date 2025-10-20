@@ -6,7 +6,7 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import type { CustomPAOItem } from '../App';
+import type { CustomPAOItem } from '../src/App';
 
 interface CreatePageProps {
   customPAOData: CustomPAOItem[];

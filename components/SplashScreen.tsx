@@ -1,83 +1,85 @@
-import  { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { Brain } from 'lucide-react';
 
 interface SplashScreenProps {
   onComplete: () => void;
 }
 
-export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
+export function SplashScreen({ onComplete }: SplashScreenProps) {
+  const [isVisible, setIsVisible] = useState(true);
+
   useEffect(() => {
+    // Show splash for 2 seconds
     const timer = setTimeout(() => {
-      onComplete();
-    }, 2500);
+      setIsVisible(false);
+      // Wait for fade out animation to complete
+      setTimeout(onComplete, 400);
+    }, 2000);
+
     return () => clearTimeout(timer);
   }, [onComplete]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center z-50"
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-primary via-chart-1 to-primary transition-opacity duration-400 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
     >
-      <div className="text-center">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ 
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 20,
-                  duration: 1
-                }}
-                className="mb-6"
-              >
-                <div className="bg-white/20 backdrop-blur-lg p-8 rounded-3xl inline-block">
-                  <Brain className="w-20 h-20 text-white" strokeWidth={1.5} />
-                </div>
-              </motion.div>
-              
-              <motion.h1
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-5xl font-bold text-white mb-2"
-              >
-                PAO Memory
-              </motion.h1>
-              
-              <motion.p
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-white/80 text-lg"
-              >
-                Memorize Numbers Faster
-              </motion.p>
-              
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.8 }}
-                className="mt-8"
-              >
-                <div className="flex gap-2 justify-center">
-                  {[0, 1, 2].map((i) => (
-                    <motion.div
-                      key={i}
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        delay: i * 0.2
-                      }}
-                      className="w-2 h-2 bg-white rounded-full"
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-    </motion.div>
+      <div className="flex flex-col items-center gap-6 px-6">
+        {/* Logo/Icon */}
+        <div className="relative">
+          <div className="w-24 h-24 rounded-[2rem] bg-white/20 backdrop-blur-lg flex items-center justify-center shadow-2xl animate-float">
+            <Brain className="w-14 h-14 text-white" strokeWidth={1.5} />
+          </div>
+          
+          {/* Pulse effect */}
+          <div className="absolute inset-0 rounded-[2rem] bg-white/10 animate-pulse-slow" />
+        </div>
+
+        {/* App Name */}
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl tracking-tight text-white">
+            PAO Master
+          </h1>
+          <p className="text-white/80 text-sm">
+            Train your memory like an athlete
+          </p>
+        </div>
+
+        {/* Loading indicator */}
+        <div className="flex gap-1.5 mt-4">
+          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-12px);
+          }
+        }
+        .animate-float {
+          animation: float 2.5s ease-in-out infinite;
+        }
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.1;
+            transform: scale(1.05);
+          }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 2s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
   );
-};
+}

@@ -7,7 +7,7 @@ import { Progress } from './ui/progress';
 import { Slider } from './ui/slider';
 import { Input } from './ui/input';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import type { CustomPAOItem } from '../App';
+import type { CustomPAOItem } from '../src/App';
 
 interface PracticePageProps {
   defaultPAOData: any;

@@ -1,6 +1,6 @@
-//import React from 'react';
-import { Home, Plus, Play, Settings } from 'lucide-react';
-import type { AppPage } from '../App';
+import { Home, Plus, Play, Settings, UserCircle } from 'lucide-react';
+import type { AppPage } from '../src/types/AppPage';
+
 
 interface BottomNavProps {
   currentPage: AppPage;
@@ -12,7 +12,8 @@ export function BottomNav({ currentPage, onPageChange }: BottomNavProps) {
     { icon: Home, label: 'Home', page: 'home' as AppPage },
     { icon: Plus, label: 'Create', page: 'create' as AppPage },
     { icon: Play, label: 'Practice', page: 'practice' as AppPage },
-    { icon: Settings, label: 'Settings', page: 'settings' as AppPage }
+    { icon: Settings, label: 'Settings', page: 'settings' as AppPage },
+    { icon: UserCircle, label: 'Profile', page: 'profile' as AppPage }
   ];
 
   return (
@@ -24,7 +25,7 @@ export function BottomNav({ currentPage, onPageChange }: BottomNavProps) {
           {/* Top accent line with gradient */}
           <div className="absolute top-0 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent rounded-full" />
           
-          <nav className="flex items-center justify-around py-4 px-4 nav-glass">
+          <nav className="flex items-center justify-around py-4 px-2 nav-glass">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentPage === item.page;
@@ -33,7 +34,7 @@ export function BottomNav({ currentPage, onPageChange }: BottomNavProps) {
                 <button
                   key={item.label}
                   onClick={() => onPageChange(item.page)}
-                  className={`relative flex flex-col items-center gap-1.5 p-3 rounded-2xl transition-all duration-300 ease-out min-w-0 flex-1 max-w-20 group ${
+                  className={`relative flex flex-col items-center gap-1.5 p-2.5 rounded-2xl transition-all duration-300 ease-out min-w-0 flex-1 max-w-[72px] group ${
                     isActive 
                       ? 'text-primary nav-item-active scale-105' 
                       : 'text-slate-600 nav-item-inactive hover:scale-105'
@@ -50,7 +51,7 @@ export function BottomNav({ currentPage, onPageChange }: BottomNavProps) {
                   {/* Enhanced hover state */}
                   <div className="absolute inset-0 bg-slate-500/0 group-hover:bg-slate-500/8 dark:group-hover:bg-slate-400/10 rounded-2xl transition-colors duration-300" />
                   
-                  <div className="relative z-10 flex flex-col items-center gap-1.5">
+                  <div className="relative z-10 flex flex-col items-center gap-1">
                     {/* Icon container with enhanced styling */}
                     <div className={`p-1.5 rounded-xl transition-all duration-300 ${
                       isActive 
@@ -58,14 +59,14 @@ export function BottomNav({ currentPage, onPageChange }: BottomNavProps) {
                         : 'bg-transparent group-hover:bg-slate-500/8 dark:group-hover:bg-slate-400/10'
                     }`}>
                       <Icon 
-                        size={22} 
+                        size={20} 
                         strokeWidth={isActive ? 2.5 : 2}
                         className="transition-all duration-300"
                       />
                     </div>
                     
                     {/* Enhanced label styling */}
-                    <span className={`text-xs transition-all duration-300 ${
+                    <span className={`text-[10px] transition-all duration-300 ${
                       isActive 
                         ? 'font-semibold' 
                         : 'font-medium'
