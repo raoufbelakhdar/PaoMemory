@@ -437,7 +437,7 @@ export function CreatePage({
             </div>
             <div className="text-left">
               <div className="font-semibold">Add New {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</div>
-              <div className="text-sm text-muted-foreground">Create a custom {activeTab} for your PAO system</div>
+              <div className="text-sm text-muted-foreground">Create a custom {activeTab}</div>
             </div>
           </Button>
         )}
@@ -531,19 +531,8 @@ export function CreatePage({
   };
 
   return (
-    <main className="flex-1 px-6 pb-24">
+    <main className="flex-1 px-6 pb-24 mt-2">
       <div className="space-y-6">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          {(['person', 'action', 'object'] as const).map((type) => (
-            <div key={type} className="glass rounded-2xl p-4 shadow-soft border border-white/20 text-center px-[14px] py-[10px] mt-[10px] mr-[0px] mb-[0px] ml-[0px]">
-              <div className="text-2xl mb-2">{getTabIcon(type)}</div>
-              <div className="font-semibold">{getItemsForTab(type).length}</div>
-              <div className="text-xs text-muted-foreground capitalize">{type}s</div>
-            </div>
-          ))}
-        </div>
-
         {/* Tab Navigation */}
         <div className="flex space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
           {(['person', 'action', 'object'] as const).map((type) => (
@@ -565,7 +554,8 @@ export function CreatePage({
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
               }`}
             >
-              {getTabIcon(type)} {type.charAt(0).toUpperCase() + type.slice(1)}s
+              
+              {getTabIcon(type)} <div className="font-semibold">{getItemsForTab(type).length}</div>{type.charAt(0).toUpperCase() + type.slice(1)}s
             </button>
           ))}
         </div>
