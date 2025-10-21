@@ -467,7 +467,7 @@ export function CreatePage({
           ) : (
             items.map((item) => (
               <Card key={item.id} className="bg-white/95 dark:bg-slate-800/95 border border-slate-200/50 dark:border-slate-700/50 shadow-soft">
-                <CardContent className="p-[0px]">
+                <CardContent className="p-[0px] [&:last-child]:pb-0">
                   {editingId === item.id ? (
                     <div className="p-4">
                       <InlineEditForm

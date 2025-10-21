@@ -685,7 +685,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
     if (quizSetupPhase) {
       return (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-5">
             <Button variant="ghost" onClick={() => setCurrentMode('menu')} className="rounded-xl h-10 px-3 text-sm">
               <ArrowLeft size={16} className="mr-2" />
               Back to Menu
@@ -765,7 +765,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
 
     if (quizCompleted) {
       return (
-        <div className="space-y-4 text-center">
+        <div className="space-y-4 text-center mt-10">
           <div className="text-4xl mb-2">🎉</div>
           <h2 className="text-lg">Quiz Complete!</h2>
           <div className="glass rounded-2xl p-4">
@@ -779,12 +779,12 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
               Accuracy: {Math.round((score / currentQuiz.length) * 100)}%
             </div>
           </div>
-          <div className="flex gap-3 mb-8">
-            <Button onClick={startQuiz} className="flex-1 rounded-xl h-12 text-sm">
+          <div className=" gap-3 mb-8 px-5">
+            <Button onClick={startQuiz} className="flex-1 rounded-xl h-12 text-sm w-full mb-4">
               <RotateCcw size={16} className="mr-2" />
               New Quiz
             </Button>
-            <Button variant="outline" onClick={resetQuiz} className="flex-1 rounded-xl h-12 text-sm">
+            <Button variant="outline" onClick={resetQuiz} className="flex-1 rounded-xl h-12 text-sm w-full">
               Settings
             </Button>
           </div>
@@ -797,7 +797,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
 
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-5">
           <Button variant="ghost" onClick={resetQuiz} className="rounded-xl h-10 px-3 text-sm">
             <ArrowLeft size={16} className="mr-2" />
             Back
@@ -871,7 +871,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
     if (speedTrainingPhase === 'setup') {
       return (
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-5">
             <Button variant="ghost" onClick={() => setCurrentMode('menu')} className="rounded-xl h-10 px-3 text-sm">
               <ArrowLeft size={16} className="mr-2" />
               Back to Menu
@@ -961,7 +961,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
 
     if (speedTrainingPhase === 'session-complete') {
       return (
-        <div className="space-y-3 text-center">
+        <div className="space-y-3 text-center mt-10">
           <div className="text-4xl mb-2">🎯</div>
           <h2 className="text-lg">Session Complete!</h2>
           <div className="glass rounded-2xl p-4">
@@ -975,12 +975,12 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
               Accuracy: {Math.round((speedScore / speedSessionLength) * 100)}%
             </div>
           </div>
-          <div className="flex gap-3 mb-8">
-            <Button onClick={startSpeedTraining} className="flex-1 rounded-xl h-11 text-sm">
+          <div className="gap-3 mb-8 px-5">
+            <Button onClick={startSpeedTraining} className="flex-1 rounded-xl h-11 text-sm w-full mb-4">
               <RotateCcw size={16} className="mr-2" />
               New Session
             </Button>
-            <Button variant="outline" onClick={resetSpeedTraining} className="flex-1 rounded-xl h-11 text-sm">
+            <Button variant="outline" onClick={resetSpeedTraining} className="flex-1 rounded-xl h-11 text-sm w-full">
               Settings
             </Button>
           </div>
@@ -992,7 +992,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
 
     return (
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-5">
           <Button variant="ghost" onClick={resetSpeedTraining} className="rounded-xl h-10 px-3 text-sm">
             <ArrowLeft size={16} className="mr-2" />
             Back
@@ -1146,7 +1146,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
     if (sequencePhase === 'setup') {
       return (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-5">
             <Button variant="ghost" onClick={() => setCurrentMode('menu')} className="rounded-xl h-10 px-3 text-sm">
               <ArrowLeft size={16} className="mr-2" />
               Back to Menu
@@ -1262,7 +1262,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
     if (sequencePhase === 'recall') {
       return (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-5">
             <Button variant="ghost" onClick={() => {
               setSequencePhase('setup');
               setCurrentSequence(null);
@@ -1375,7 +1375,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
 
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-5">
           <Button variant="ghost" onClick={() => setCurrentMode('menu')} className="rounded-xl h-10 px-3 text-sm">
             <ArrowLeft size={16} className="mr-2" />
             Back to Menu
@@ -1451,7 +1451,7 @@ export function PracticePage({ defaultPAOData, onModeChange }: PracticePageProps
                     
                     {/* Bottom section - Content */}
                     <div className="text-center">
-                      <div className="flashcard-title">
+                      <div className="flashcard-title ">
                         {currentValue}
                       </div>
                       <div className="mt-2 px-2 py-1 bg-white/90 dark:bg-black/90 rounded-lg backdrop-blur-sm">
